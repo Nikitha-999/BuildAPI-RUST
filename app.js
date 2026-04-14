@@ -15,7 +15,10 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 
 mongoose.connect("mongodb://localhost:27017/wikiDB", {
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).catch(err => {
+  console.log("MongoDB connection failed (non-fatal):", err.message);
 });
 
 const articleSchema = {
@@ -119,7 +122,7 @@ app.route("/articles/:articleTitle")
 
 .delete(function(req, res){
   const articleTitle = req.params.articleTitle;
-  LostPet.findOneAndDelete({title: articleTitle}, function(err){
+  Article.findOneAndDelete({title: articleTitle}, function(err){
     if (!err){
       res.send("Successfully deleted selected article.");
     } else {
